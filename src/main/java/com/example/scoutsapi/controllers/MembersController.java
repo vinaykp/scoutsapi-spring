@@ -40,7 +40,7 @@ public class MembersController {
 
     @GetMapping(value = "/{id}")
     @ResponseBody
-    public ResponseEntity<?> getMember(@PathVariable("id") ObjectId id){
+    public ResponseEntity<?> getMember(@PathVariable("id") String id){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
             throw new MemberNotFoundException("Member "+id+" not found: ");
@@ -50,18 +50,19 @@ public class MembersController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> updateMember(@PathVariable("id") ObjectId id, @Valid @RequestBody Members modifyMember){
+    public ResponseEntity<?> updateMember(@PathVariable("id") String id, @Valid @RequestBody Members modifyMember){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
             throw new MemberNotFoundException("Member "+id+" not found: ");
         }
+        modifyMember.set_id(new ObjectId(member.get().get_id().toHexString()));
         memberService.updateMemberByID(id, modifyMember);
         return new ResponseEntity<Members>(modifyMember, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> deleteMember(@PathVariable("id") ObjectId id){
+    public ResponseEntity<?> deleteMember(@PathVariable("id") String id){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
             throw new MemberNotFoundException("Member "+id+" not found");
@@ -75,8 +76,8 @@ public class MembersController {
     public ResponseEntity<?> createMember(@Valid @RequestBody Members members, UriComponentsBuilder builder){
         memberService.createMember(members);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/members/{id}").buildAndExpand(members.get_id()).toUri());
-        return new ResponseEntity<Members>(headers, HttpStatus.CREATED);
+        headers.setLocation(builder.path("/members/{id}").buildAndExpand(members.getMemberId()).toUri());
+        return new ResponseEntity<Members>(members, HttpStatus.CREATED);
     }
 
 }
