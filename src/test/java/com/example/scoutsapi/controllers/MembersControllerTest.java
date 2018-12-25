@@ -39,7 +39,7 @@ public class MembersControllerTest {
     ObjectMapper objectMapper;
 
     String mockid = "5c1a9c97c1ae12366891aa91";
-    Members mockMember = new Members(mockid, "TestX UserX", "testx.userx@x.com", "male", "12", "123-456-7890" );
+    Members mockMember = new Members( mockid, "TestX UserX", "testx.userx@x.com", "male", "12", "123-456-7890" );
 
     @Test
     public void getAllMemberSuccess() throws Exception {
@@ -95,7 +95,7 @@ public class MembersControllerTest {
                 .content(dummyMemberJson))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.memberId").value("5c1a9c97c1ae12366891aa91"));
+                .andExpect(jsonPath("$.memberId").value(mockid));
     }
 
     @Test
@@ -107,8 +107,19 @@ public class MembersControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyMemberJson))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.age", is(mockMember.getAge())));
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updatFailure() throws Exception {
+        final String dummyMemberJson = objectMapper.writeValueAsString(mockMember);
+        when(memberService.getMemberById(mockid)).thenReturn(Optional.empty());
+        doNothing().when(memberService).updateMemberByID(mockid, mockMember);
+        this.mockMvc.perform(put("/members/{id}", mockMember.getMemberId() )
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyMemberJson))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test

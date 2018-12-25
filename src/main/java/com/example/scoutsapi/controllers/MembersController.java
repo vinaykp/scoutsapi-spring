@@ -53,9 +53,9 @@ public class MembersController {
     public ResponseEntity<?> updateMember(@PathVariable("id") String id, @Valid @RequestBody Members modifyMember){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
-            throw new MemberNotFoundException("Member "+id+" not found: ");
+            throw new MemberNotFoundException("Member "+id+" not found");
         }
-        modifyMember.set_id(new ObjectId(member.get().get_id().toHexString()));
+        modifyMember.setMemberId(id);
         memberService.updateMemberByID(id, modifyMember);
         return new ResponseEntity<Members>(modifyMember, HttpStatus.OK);
     }
