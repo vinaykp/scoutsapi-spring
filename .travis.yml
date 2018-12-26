@@ -14,7 +14,6 @@ git:
 addons:
   sonarcloud:
     organization: "vinaykp-github"
-    projectKey: "vinaykp_scoutsapi-spring"
     token:
       secure: $SONAR_TOKEN
 
