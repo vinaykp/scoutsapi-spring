@@ -56,7 +56,7 @@
 				<version>0.8.0</version>
 				<configuration>
 					<excludes>
-						<exclude>**/**/model/*.*</exclude>
+						<exclude>**/model/*.*</exclude>
 						<exclude>**/*Application.*</exclude>
 					</excludes>
 				</configuration>
