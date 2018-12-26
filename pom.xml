@@ -56,8 +56,8 @@
 				<version>0.7.9</version>
 				<configuration>
 					<excludes>
-						<exclude>com/example/scoutsapi/model/*</exclude>
-						<exclude>com/example/scoutsapi/*Application</exclude>
+						<exclude>**/model/*.*</exclude>
+						<exclude>**/*Application.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
