@@ -11,7 +11,7 @@
 	<groupId>com.example.scoutsapi</groupId>
 	<artifactId>scoutsapi-spring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>scoutsapi</name>
+	<name>scoutsapi-spring</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -54,6 +54,12 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.7.9</version>
+				<configuration>
+					<excludes>
+						<exclude>com/example/scoutsapi/model/*</exclude>
+						<exclude>com/example/scoutsapi/*Application</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>

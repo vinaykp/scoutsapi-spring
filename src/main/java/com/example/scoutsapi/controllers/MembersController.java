@@ -4,7 +4,6 @@ package com.example.scoutsapi.controllers;
 import com.example.scoutsapi.exceptions.MemberNotFoundException;
 import com.example.scoutsapi.model.Members;
 import com.example.scoutsapi.services.MemberService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,20 +39,20 @@ public class MembersController {
 
     @GetMapping(value = "/{id}")
     @ResponseBody
-    public ResponseEntity<?> getMember(@PathVariable("id") String id){
+    public ResponseEntity<Members> getMember(@PathVariable("id") String id){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
-            throw new MemberNotFoundException("Member "+id+" not found: ");
+            throw new MemberNotFoundException("Member "+id+" not found");
         }
         return new ResponseEntity<Members>(member.get(), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> updateMember(@PathVariable("id") String id, @Valid @RequestBody Members modifyMember){
+    public ResponseEntity<Members> updateMember(@PathVariable("id") String id, @Valid @RequestBody Members modifyMember){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
-            throw new MemberNotFoundException("Member "+id+" not found");
+            throw new MemberNotFoundException("Member "+id+" not found to update");
         }
         modifyMember.setMemberId(id);
         memberService.updateMemberByID(id, modifyMember);
@@ -62,10 +61,10 @@ public class MembersController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> deleteMember(@PathVariable("id") String id){
+    public ResponseEntity<Members> deleteMember(@PathVariable("id") String id){
         Optional<Members> member = memberService.getMemberById(id);
         if (!member.isPresent()) {
-            throw new MemberNotFoundException("Member "+id+" not found");
+            throw new MemberNotFoundException("Member "+id+" not found to delete");
         }
         memberService.deleteMemberById(id);
         return new ResponseEntity<Members>(HttpStatus.NO_CONTENT);
@@ -73,7 +72,7 @@ public class MembersController {
 
     @PostMapping(value = "/",consumes = {"application/json"},produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity<?> createMember(@Valid @RequestBody Members members, UriComponentsBuilder builder){
+    public ResponseEntity<Members> createMember(@Valid @RequestBody Members members, UriComponentsBuilder builder){
         memberService.createMember(members);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/members/{id}").buildAndExpand(members.getMemberId()).toUri());
